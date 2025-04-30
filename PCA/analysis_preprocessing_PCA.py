@@ -23,14 +23,46 @@ def summary_info(df):
     print(df.dtypes)
 
 
-def handle_missing_values(df) -> pd.DataFrame:
+
+def fill_missing_values(df) -> pd.DataFrame:
     # Check for missing values
-    # print("\nMissing Values:")
-    # print(df.isnull().sum())
+    print("\nMissing Values:")
+    print(df.isnull().sum())
 
     # Show rows with missing values
-    # print("\nRows with Missing Values:")
-    # print(df[df.isnull().any(axis=1)])
+    print("\nRows with Missing Values:")
+    print(df[df.isnull().any(axis=1)])
+
+    # Show rows with missing values and the columns where they're missing
+    print("\nRows with Missing Values and Missing Columns:")
+    rows_with_na = df[df.isnull().any(axis=1)]
+    for index, row in rows_with_na.iterrows():
+        missing_cols = row[row.isnull()].index.tolist()
+        print(f"Row {index} is missing values in columns: {missing_cols}")
+
+    # Fill missing values
+    for column in df.columns:
+        if df[column].dtype in ['float64', 'int64']:
+            mean_value = df[column].mean()
+            df[column].fillna(mean_value, inplace=True)
+            print(f"Filled missing numeric values in '{column}' with mean: {mean_value}")
+        else:
+            mode_value = df[column].mode().iloc[0] if not df[column].mode().empty else "N/A"
+            df[column].fillna(mode_value, inplace=True)
+            print(f"Filled missing non-numeric values in '{column}' with mode: {mode_value}")
+
+    print("\nAll missing values have been filled.")
+    return df
+
+
+def drop_missing_values(df) -> pd.DataFrame:
+    # Check for missing values
+    print("\nMissing Values:")
+    print(df.isnull().sum())
+
+    # Show rows with missing values
+    print("\nRows with Missing Values:")
+    print(df[df.isnull().any(axis=1)])
 
     # Show rows with missing values and the columns where they're missing
     print("\nRows with Missing Values and Missing Columns:")
