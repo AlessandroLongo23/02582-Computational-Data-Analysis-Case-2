@@ -23,7 +23,6 @@ def summary_info(df):
     print(df.dtypes)
 
 
-
 def fill_missing_values(df) -> pd.DataFrame:
     # Check for missing values
     print("\nMissing Values:")
@@ -87,15 +86,26 @@ def visualize_data(df):
     plt.title("Correlation Heatmap")
     num_cols = len(corr_matrix.columns)
     num_rows = len(corr_matrix.index)
-    plt.xticks(np.arange(0.5, num_cols, 1), corr_matrix.columns, rotation=90, ha='center', fontsize=5)
-    plt.yticks(np.arange(0.5, num_rows, 1), corr_matrix.index, rotation=0, va='center', fontsize=5)
+    plt.xticks(np.arange(0.5, num_cols, 1), corr_matrix.columns, rotation=90, ha='center', fontsize=6)
+    plt.yticks(np.arange(0.5, num_rows, 1), corr_matrix.index, rotation=0, va='center', fontsize=6)
     plt.tight_layout() # Adjust layout to prevent labels from overlapping
     plt.show()
 
     # Histograms for numerical features
     print("\nGenerating Histograms...")
     # Create histogram subplots
-    axes = df.hist(bins=20, figsize=(15, 10))
+    axes = df.hist(bins=20, figsize=(14, 10), layout=(6, 9))
+    
+    fig = plt.gcf()
+
+    fig.subplots_adjust(
+        left=0.05,    # Reduce left margin
+        right=0.8,   # Reduce right margin
+        bottom=0.05,  # Reduce bottom margin
+        top=0.95,     # Reduce top margin
+        wspace=0.4,   # Increase horizontal space between plots
+        hspace=0.5    # Increase vertical space between plots
+    )
     
     # Adjust title and tick label font sizes for each subplot
     for ax_row in axes:
@@ -193,19 +203,15 @@ def perform_pca(df):
 
 
 def main():
-    df = load_data("HR_data.csv")
-
-    summary_info(df)
-
-    df = df.drop(columns=[df.columns[0]])   # Drop the first (ID) column
-    df = handle_missing_values(df)
-
-    # Save cleaned dataset
-    df.to_csv('HR_data_cleaned.csv', index=False)
+    file_path = "project_repo/02582-Computational-Data-Analysis-Case-2/PCA/HR_features_scaled.csv"
+    try:
+        df = pd.read_csv(file_path)
+    except FileNotFoundError:
+        print(f"Error: Could not find file at {file_path}")
+        print("Please check if the file path is correct and the file exists")
+        raise
 
     visualize_data(df)
-
-    df = load_data("HR_data_cleaned.csv")
 
     perform_pca(df)
 
