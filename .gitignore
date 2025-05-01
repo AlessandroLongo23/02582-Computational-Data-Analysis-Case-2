@@ -1,1 +1,9 @@
 data
+
+UMAP/plots/
+UMAP/__pycache__/
+
+Preprocessing/HR_features_scaled.csv
+Preprocessing/HR_targets_scaled.csv
+Preprocessing/HR_metadata.csv
+
